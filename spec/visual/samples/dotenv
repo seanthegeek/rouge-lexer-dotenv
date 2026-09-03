@@ -1,0 +1,111 @@
+# Visual sample for the dotenv lexer. Every construct below comes from the
+# env.dev dotenv guide: https://env.dev/guides/dotenv
+
+# ---------------------------------------------------------------------------
+# Basic assignment: KEY=value, uppercase keys, no spaces around the `=`
+# ---------------------------------------------------------------------------
+DATABASE_HOST=localhost
+PORT=3000
+NODE_ENV=development
+LOG_LEVEL=debug
+STRIPE_SECRET_KEY=sk_test_abc123
+BASE_URL=https://api.example.com
+
+# Integer values
+DATABASE_POOL_SIZE=10
+MAX_RETRIES=5
+TIMEOUT_MS=30000
+
+# Feature flags (boolean values)
+ENABLE_CACHE=true
+ENABLE_TRACING=false
+
+# Lowercase and mixed-case keys are accepted even though uppercase is the
+# convention
+db_host=localhost
+apiKey=abc123
+_PRIVATE=1
+
+# ---------------------------------------------------------------------------
+# Quoted values
+# ---------------------------------------------------------------------------
+
+# Double quotes allow spaces and special characters
+GREETING="Hello, World!"
+DATABASE_URL="postgres://user:pass@localhost:5432/mydb"
+SENDGRID_API_KEY="SG.xxxx"
+MESSAGE="It's a \"quoted\" word with a tab\tand a backslash \\"
+DOUBLE_TRUE="true"
+DOUBLE_NUMBER="3000"
+
+# Single quotes treat the value as a literal string with no interpolation
+REGEX='\d+\.\d+'
+LITERAL='${NOT_EXPANDED} stays as written'
+QUOTE='He said "hi"'
+SINGLE_HASH='# not a comment'
+
+# ---------------------------------------------------------------------------
+# Comments and empty values
+# ---------------------------------------------------------------------------
+
+# Database config
+DB_PASSWORD=
+DB_NAME=""
+DB_USER=''
+
+# Inline comments are supported by some parsers but not all
+REDIS_HOST=localhost # local development only
+REDIS_PORT=6379 # default port
+DEBUG=true # feature flag
+CACHE_TTL="60" # quoted number
+
+# An unquoted `#` with no space in front of it is part of the value; many
+# parsers truncate here, so the guide recommends quoting the value instead
+DOCS_URL=https://x.com#anchor
+DOCS_URL_QUOTED="https://x.com#anchor"
+
+# ---------------------------------------------------------------------------
+# Multiline and variable expansion
+# ---------------------------------------------------------------------------
+
+# Some parsers support multiline values in double quotes
+PRIVATE_KEY="-----BEGIN RSA KEY-----
+MIIBogIBAAJBALRi...
+-----END RSA KEY-----"
+
+CERTIFICATE="-----BEGIN CERTIFICATE-----
+MIIC+zCCAeOgAwIBAgIJAL
+-----END CERTIFICATE-----"
+
+# Variable expansion with the ${} syntax
+BASE_URL=https://api.example.com
+FULL_URL=${BASE_URL}/v1/users
+API_ROOT=${BASE_URL}
+HEALTH_URL=${BASE_URL}/health # inline comment after expansion
+PREFIX_AND_SUFFIX=prefix-${NODE_ENV}-suffix
+TWO_VARIABLES=${DATABASE_HOST}:${PORT}
+
+# Expansion inside double quotes
+DATABASE_URL="postgres://user:${DB_PASSWORD}@${DATABASE_HOST}:5432/${DB_NAME}"
+GREETING_FULL="${GREETING} from ${NODE_ENV}"
+
+# A lone dollar sign that is not an expansion is plain text
+PRICE=$5
+PRICE_QUOTED="costs $5"
+
+# ---------------------------------------------------------------------------
+# Whitespace and per-environment values
+# ---------------------------------------------------------------------------
+
+# Whitespace around `=` breaks most parsers; it is tokenised but not endorsed
+SPACED_KEY = value
+	TAB_INDENTED=value
+  SPACE_INDENTED=value
+
+# Values typical of a committed .env.example template
+SECRET_KEY=replace-me
+SENTRY_DSN=
+AWS_REGION=us-east-1
+S3_BUCKET=my-bucket.example.com
+ALLOWED_HOSTS=localhost,127.0.0.1,example.com
+CORS_ORIGINS="http://localhost:3000, https://app.example.com"

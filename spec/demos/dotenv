@@ -1,0 +1,15 @@
+# App
+NODE_ENV=development
+PORT=3000
+
+# Database
+DATABASE_URL="postgres://user:pass@localhost:5432/mydb"
+DATABASE_POOL_SIZE=10
+
+# External APIs
+STRIPE_SECRET_KEY=sk_test_abc123
+SENDGRID_API_KEY="SG.xxxx"
+# Feature flags
+ENABLE_CACHE=true
+BASE_URL=https://api.example.com
+FULL_URL=${BASE_URL}/v1/users
